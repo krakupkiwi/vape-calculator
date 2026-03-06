@@ -20,7 +20,10 @@ def on_startup():
     alembic_command.upgrade(cfg, "head")
     from app.seed import run_seed, seed_templates
     run_seed()
-    seed_templates()
+    try:
+        seed_templates()
+    except Exception as e:
+        print(f"[seed] WARNING: Could not copy label templates: {e}")
 
 
 # --- API routes (must be registered BEFORE static files) ---

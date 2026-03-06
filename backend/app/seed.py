@@ -58,14 +58,21 @@ def run_seed():
 
 def seed_templates():
     """Copy bundled label templates to /data/templates/ if not already present."""
-    DATA_TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        DATA_TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        print(f"[seed] WARNING: Cannot create {DATA_TEMPLATES_DIR}: {e}")
+        return
     for src in SEEDS_TEMPLATES_DIR.glob("*.html"):
         dest = DATA_TEMPLATES_DIR / src.name
-        if not dest.exists():
-            shutil.copy2(src, dest)
-            print(f"[seed] Copied template: {src.name}")
-        else:
-            print(f"[seed] Template already exists: {src.name}")
+        try:
+            if not dest.exists():
+                shutil.copy2(src, dest)
+                print(f"[seed] Copied template: {src.name}")
+            else:
+                print(f"[seed] Template already exists: {src.name}")
+        except OSError as e:
+            print(f"[seed] WARNING: Could not copy {src.name}: {e}")
 
 
 if __name__ == "__main__":
