@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Tag, Download, RefreshCw, Upload, AlertCircle, Loader2 } from 'lucide-svelte';
-	import { addToast } from '$lib/stores/toast';
+	import { showToast } from '$lib/stores/toast';
 
 	interface RecipeSummary {
 		id: number;
@@ -49,7 +49,7 @@
 			recipes = await res.json();
 			if (recipes.length > 0) selectedRecipeId = recipes[0].id;
 		} catch (e) {
-			addToast('Could not load recipes.', 'error');
+			showToast('Could not load recipes.', 'error');
 		} finally {
 			loadingRecipes = false;
 		}
@@ -63,7 +63,7 @@
 			templates = await res.json();
 			if (templates.length > 0) selectedTemplate = templates[0].name;
 		} catch (e) {
-			addToast('Could not load templates.', 'error');
+			showToast('Could not load templates.', 'error');
 		} finally {
 			loadingTemplates = false;
 		}
@@ -127,7 +127,7 @@
 			a.click();
 			URL.revokeObjectURL(url);
 		} catch (e: any) {
-			addToast(e.message ?? 'PDF generation failed', 'error');
+			showToast(e.message ?? 'PDF generation failed', 'error');
 		} finally {
 			downloading = false;
 		}
@@ -137,7 +137,7 @@
 		const file = fileInput?.files?.[0];
 		if (!file) return;
 		if (!file.name.endsWith('.html')) {
-			addToast('Only .html files are accepted.', 'error');
+			showToast('Only .html files are accepted.', 'error');
 			return;
 		}
 		uploading = true;
@@ -155,10 +155,10 @@
 			const info: TemplateInfo = await res.json();
 			templates = [...templates.filter((t) => t.name !== info.name), info];
 			selectedTemplate = info.name;
-			addToast(`Template "${info.name}" uploaded.`, 'success');
+			showToast(`Template "${info.name}" uploaded.`, 'success');
 			if (fileInput) fileInput.value = '';
 		} catch (e: any) {
-			addToast(e.message ?? 'Upload failed', 'error');
+			showToast(e.message ?? 'Upload failed', 'error');
 		} finally {
 			uploading = false;
 		}
@@ -182,7 +182,7 @@
 
 			<!-- Recipe selector -->
 			<div>
-				<label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Recipe</label>
+				<label for="recipe-select" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Recipe</label>
 				{#if loadingRecipes}
 					<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
 						<Loader2 size={14} class="animate-spin" /> Loading recipes…
@@ -193,6 +193,7 @@
 					</p>
 				{:else}
 					<select
+						id="recipe-select"
 						class={inputClass}
 						bind:value={selectedRecipeId}
 					>
@@ -205,7 +206,7 @@
 
 			<!-- Template selector -->
 			<div>
-				<label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Template</label>
+				<label for="template-select" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Template</label>
 				{#if loadingTemplates}
 					<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
 						<Loader2 size={14} class="animate-spin" /> Loading templates…
@@ -213,7 +214,7 @@
 				{:else if templates.length === 0}
 					<p class="text-sm text-gray-500 dark:text-gray-400">No templates found.</p>
 				{:else}
-					<select class={inputClass} bind:value={selectedTemplate}>
+					<select id="template-select" class={inputClass} bind:value={selectedTemplate}>
 						{#each templates as t}
 							<option value={t.name}>{t.name}</option>
 						{/each}
@@ -223,19 +224,19 @@
 
 			<!-- Author -->
 			<div>
-				<label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Author / Mixer name</label>
-				<input type="text" class={inputClass} placeholder="e.g. Sam" bind:value={author} />
+				<label for="label-author" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Author / Mixer name</label>
+				<input id="label-author" type="text" class={inputClass} placeholder="e.g. Sam" bind:value={author} />
 			</div>
 
 			<!-- Page size -->
 			<div class="grid grid-cols-2 gap-3">
 				<div>
-					<label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Width (mm)</label>
-					<input type="number" class={inputClass} min="10" max="300" bind:value={pageWidth} />
+					<label for="label-width" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Width (mm)</label>
+					<input id="label-width" type="number" class={inputClass} min="10" max="300" bind:value={pageWidth} />
 				</div>
 				<div>
-					<label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Height (mm)</label>
-					<input type="number" class={inputClass} min="10" max="300" bind:value={pageHeight} />
+					<label for="label-height" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Height (mm)</label>
+					<input id="label-height" type="number" class={inputClass} min="10" max="300" bind:value={pageHeight} />
 				</div>
 			</div>
 

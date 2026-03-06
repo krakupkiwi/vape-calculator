@@ -67,8 +67,8 @@
 	});
 
 	// --- Save recipe ---
-	let saving = false;
-	let savedId: number | null = null;
+	let saving = $state(false);
+	let savedId = $state<number | null>(null);
 
 	async function saveRecipe() {
 		if (saving) return;
