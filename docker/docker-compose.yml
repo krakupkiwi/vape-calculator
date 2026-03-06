@@ -5,7 +5,7 @@ services:
       dockerfile: docker/Dockerfile
     container_name: vapecalc
     ports:
-      - "${APP_PORT:-3000}:8000"
+      - "${APP_PORT:-8484}:8000"
     volumes:
       # Unraid: change left side to /mnt/user/appdata/vapecalc
       # Local dev: change to ./data or a named volume (see bottom of file)
