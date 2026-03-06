@@ -1,0 +1,12 @@
+# Normalize line endings to LF on commit (prevents Windows CRLF in repo)
+* text=auto eol=lf
+
+# Binary files — never touch line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.db binary
+*.sqlite3 binary

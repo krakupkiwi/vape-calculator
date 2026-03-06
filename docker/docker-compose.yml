@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: vapecalc
+    ports:
+      - "${APP_PORT:-3000}:8000"
+    volumes:
+      # Unraid: change left side to /mnt/user/appdata/vapecalc
+      # Local dev: change to ./data or a named volume (see bottom of file)
+      - /mnt/user/appdata/vapecalc:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/vape.db
+      - APP_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Frontend build artifacts (built inside Docker)
+frontend/node_modules
+frontend/.svelte-kit
+frontend/build
+
+# Backend virtualenv and cache
+backend/.venv
+backend/__pycache__
+backend/**/__pycache__
+backend/**/*.pyc
+backend/dev.db
+
+# Data volume (never bake DB into image)
+data/
+
+# Docs and dev files
+docs/
+*.md
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode
+.claude
