@@ -50,6 +50,12 @@ function defaultRecipe(): RecipeState {
 
 export const recipe = writable<RecipeState>(defaultRecipe());
 
+export function resetRecipe() {
+	recipe.set(defaultRecipe());
+	result.set(null);
+	calcError.set(null);
+}
+
 export const result = writable<CalculateResponse | null>(null);
 export const calculating = writable(false);
 export const calcError = writable<string | null>(null);

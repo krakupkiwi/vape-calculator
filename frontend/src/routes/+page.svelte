@@ -2,11 +2,11 @@
 	import { onDestroy, onMount } from 'svelte';
 	import Calculator from '$lib/components/Calculator.svelte';
 	import ResultsPanel from '$lib/components/ResultsPanel.svelte';
-	import { recipe, result, calculating, calcError, stateToRecipeIn } from '$lib/stores/recipe';
+	import { recipe, result, calculating, calcError, stateToRecipeIn, resetRecipe } from '$lib/stores/recipe';
 	import { calculate } from '$lib/api/client';
 	import { recipesApi } from '$lib/api/recipes';
 	import { showToast } from '$lib/stores/toast';
-	import { Save, X, Info } from 'lucide-svelte';
+	import { Save, X, Info, RotateCcw } from 'lucide-svelte';
 
 	let debounceTimer: ReturnType<typeof setTimeout>;
 
@@ -121,24 +121,35 @@
 	<section class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-5">
 		<div class="flex items-center justify-between mb-4">
 			<h2 class="text-base font-semibold text-gray-800 dark:text-gray-200">Recipe</h2>
-			<button
-				type="button"
-				onclick={saveRecipe}
-				disabled={saving}
-				class="flex items-center gap-1.5 text-sm bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-md px-3 py-1.5 transition"
-				title="Save recipe (Ctrl+S)"
-			>
-				{#if saving}
-					<svg class="animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-					</svg>
-					Saving...
-				{:else}
-					<Save size={14} />
-					Save
-				{/if}
-			</button>
+			<div class="flex items-center gap-2">
+				<button
+					type="button"
+					onclick={resetRecipe}
+					class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-700 rounded-md px-3 py-1.5 transition"
+					title="Clear form"
+				>
+					<RotateCcw size={14} />
+					Reset
+				</button>
+				<button
+					type="button"
+					onclick={saveRecipe}
+					disabled={saving}
+					class="flex items-center gap-1.5 text-sm bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-md px-3 py-1.5 transition"
+					title="Save recipe (Ctrl+S)"
+				>
+					{#if saving}
+						<svg class="animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+						</svg>
+						Saving...
+					{:else}
+						<Save size={14} />
+						Save
+					{/if}
+				</button>
+			</div>
 		</div>
 
 		<Calculator />
