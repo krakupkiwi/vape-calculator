@@ -32,6 +32,7 @@
 		{ href: '/', label: 'Calculator' },
 		{ href: '/recipes', label: 'Recipes' },
 		{ href: '/flavors', label: 'Flavors' },
+		{ href: '/labels', label: 'Labels' },
 	];
 
 	function isActive(href: string) {

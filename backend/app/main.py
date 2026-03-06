@@ -9,6 +9,7 @@ from app.routes import calculator as calculator_router
 from app.routes import recipes as recipes_router
 from app.routes import flavors as flavors_router
 from app.routes import nic_bases as nic_bases_router
+from app.routes import labels as labels_router
 
 app = FastAPI(title="Vape Calculator API")
 
@@ -17,8 +18,9 @@ app = FastAPI(title="Vape Calculator API")
 def on_startup():
     cfg = AlembicConfig(str(Path(__file__).parent.parent / "alembic.ini"))
     alembic_command.upgrade(cfg, "head")
-    from app.seed import run_seed
+    from app.seed import run_seed, seed_templates
     run_seed()
+    seed_templates()
 
 
 # --- API routes (must be registered BEFORE static files) ---
@@ -26,6 +28,7 @@ app.include_router(calculator_router.router, prefix="/api")
 app.include_router(recipes_router.router, prefix="/api")
 app.include_router(flavors_router.router, prefix="/api")
 app.include_router(nic_bases_router.router, prefix="/api")
+app.include_router(labels_router.router, prefix="/api")
 
 
 @app.get("/health")

@@ -1,8 +1,10 @@
 """
 Idempotent seed script.
-Populates the flavors table if empty, and adds default nic bases.
+Populates the flavors table if empty, adds default nic bases,
+and copies the default label template to /data/templates/.
 """
 import json
+import shutil
 from pathlib import Path
 
 from sqlmodel import Session, select
@@ -11,6 +13,8 @@ from app.database import engine
 from app.models.flavor import Flavor, NicBase
 
 FLAVORS_JSON = Path(__file__).parent.parent / "seeds" / "flavors.json"
+SEEDS_TEMPLATES_DIR = Path(__file__).parent.parent / "seeds" / "templates"
+DATA_TEMPLATES_DIR = Path("/data/templates")
 
 DEFAULT_NIC_BASES = [
     NicBase(name="100mg/mL PG Nic", strength_mg=100.0, base_pg=1.0, base_vg=0.0),
@@ -52,5 +56,18 @@ def run_seed():
             print("[seed] Nic bases table already populated — skipping.")
 
 
+def seed_templates():
+    """Copy bundled label templates to /data/templates/ if not already present."""
+    DATA_TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    for src in SEEDS_TEMPLATES_DIR.glob("*.html"):
+        dest = DATA_TEMPLATES_DIR / src.name
+        if not dest.exists():
+            shutil.copy2(src, dest)
+            print(f"[seed] Copied template: {src.name}")
+        else:
+            print(f"[seed] Template already exists: {src.name}")
+
+
 if __name__ == "__main__":
     run_seed()
+    seed_templates()
