@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Tag, Download, RefreshCw, Upload, AlertCircle, Loader2 } from 'lucide-svelte';
-	import { addToast } from '$lib/stores/toasts';
+	import { addToast } from '$lib/stores/toast';
 
 	interface RecipeSummary {
 		id: number;
@@ -277,9 +277,10 @@
 
 			<!-- Template upload -->
 			<div class="border-t border-gray-100 dark:border-gray-800 pt-4 space-y-2">
-				<label class="block text-xs font-medium text-gray-600 dark:text-gray-400">Upload custom template (.html)</label>
+				<label for="template-upload" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Upload custom template (.html)</label>
 				<div class="flex gap-2">
 					<input
+						id="template-upload"
 						type="file"
 						accept=".html"
 						bind:this={fileInput}
